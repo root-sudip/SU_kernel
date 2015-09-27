@@ -1,24 +1,9 @@
-TOPDIR=..
-include $(TOPDIR)/Generic.mak
+obj-m +=too.o
 
-OBJS:=core.o start.o i8259.o global.o traps.o hd.o \
-	clock.o syscall.o console.o keyboard.o sched.o sys.o tty.o \
-	proc.o panic.o signal.o  fork.o exit.o timer.o wait.o sched_fair.o \
-	pid.o
+KDIR =//usr/src/linux-headers-3.13.0-44-generic
 
-
-KERNEL=kernel.o
-
-$(KERNEL):$(OBJS)
-	$(LD) -r -o $@ $(OBJS)
-
-%.o:%.asm
-	$(ASM) -f elf $< -o $@ $(INCLUDE)
-
-%.o:%.c
-	$(CC) -c $(CFLAGS) $< $(INCLUDE)
+all:
+	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
 
 clean:
-	rm -f $(KERNEL) 
-	rm -f $(OBJS) 
-
+	rm -rf *.o *.ko *.mod.* *.symvers *.order
